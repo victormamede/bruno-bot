@@ -4,6 +4,9 @@ const groupId = process.env.GROUP_ID;
 
 const client = new Client({
   authStrategy: new LocalAuth(),
+  puppeteer: {
+    args: ["--no-sandbox"],
+  },
 });
 
 client.on("qr", (qr) => {
