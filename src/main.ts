@@ -1,5 +1,7 @@
 import { Client, LocalAuth } from "whatsapp-web.js";
 
+const groupId = process.env.GROUP_ID;
+
 const client = new Client({
   authStrategy: new LocalAuth(),
 });
@@ -13,6 +15,10 @@ client.on("ready", () => {
 });
 
 client.on("message", async (msg) => {
+  if (msg.from !== groupId) {
+    return;
+  }
+
   if (msg.body == "!figurinha") {
     if (msg.hasMedia) {
       msg.reply("Aguenta aí chefe");
