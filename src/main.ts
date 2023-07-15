@@ -42,10 +42,8 @@ client.on('ready', () => {
 });
 
 client.on('message', async (msg) => {
-  console.log(msg);
   if (msg.from === groupId) {
     learning.push(msg.body);
-    console.log(learning);
 
     if (Math.random() < 0.2) {
       const randomIndex = Math.floor(Math.random() * learning.length);
