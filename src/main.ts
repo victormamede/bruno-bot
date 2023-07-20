@@ -1,5 +1,7 @@
 import { Client, LocalAuth } from "whatsapp-web.js";
-import { nettoInsults } from "./utils/nettoInsults";
+import { nettoInsults } from "./data/nettoInsults";
+import { predicates, subjects } from "./data/insults";
+import { sample } from "./util/array";
 
 const groupId = process.env.GROUP_ID;
 
@@ -10,8 +12,6 @@ const client = new Client({
   },
 });
 
-const learning: string[] = [...nettoInsults, "Remulo tambem é gay ✨"];
-
 client.on("qr", (qr) => {
   console.log(qr);
 });
@@ -21,45 +21,29 @@ client.on("ready", () => {
 });
 
 client.on("message", async (msg) => {
-  if (msg.from === groupId) {
-    learning.push(msg.body);
-
-    if (Math.random() < 0.2) {
-      const randomIndex = Math.floor(Math.random() * learning.length);
-      const random = learning[randomIndex];
-      msg.reply(random);
-    }
-
-    if (
-      msg.body === "!netto" ||
-      msg.body === "!neto" ||
-      msg.body.includes("neto")
-    ) {
-      const randomIndex = Math.floor(Math.random() * nettoInsults.length);
-      const xingamento = nettoInsults[randomIndex];
-      msg.reply(xingamento);
-      return;
-    }
-
-    if (msg.body.startsWith("!ofender")) {
-      if (msg.from !== groupId) {
-        return;
-      }
-      const mentions = await msg.getMentions();
-      if (mentions.length > 0) {
-        const resp = await fetch("https://xinga-me.appspot.com/api");
-        const body = (await resp.json()) as { xingamento: string };
-
-        msg.reply(`@${mentions[0].id.user}, ${body.xingamento}`, undefined, {
-          mentions: [mentions[0]],
-        });
-      } else {
-        msg.reply("Eu vou xingar você se não largar de ser burro");
-      }
-      return;
-    }
-
+  if (msg.from !== groupId) {
     return;
+  }
+
+  if (msg.body === "!netto" || msg.body === "!neto") {
+    const randomIndex = Math.floor(Math.random() * nettoInsults.length);
+    const xingamento = nettoInsults[randomIndex];
+    msg.reply(xingamento);
+  }
+
+  if (msg.body.startsWith("!ofender")) {
+    const mentions = await msg.getMentions();
+    if (mentions.length > 0) {
+      msg.reply(
+        `@${mentions[0].id.user}, ${sample(subjects)} ${sample(predicates)}`,
+        undefined,
+        {
+          mentions: [mentions[0]],
+        }
+      );
+    } else {
+      msg.reply("Eu vou xingar você se não largar de ser burro");
+    }
   }
 
   if (msg.body === "!figurinha") {
