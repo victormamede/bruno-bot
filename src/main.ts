@@ -3,7 +3,7 @@ import netto from "./actions/netto";
 import sticker from "./actions/sticker";
 import insult from "./actions/insult";
 
-const groupId = process.env.GROUP_ID;
+const chatId = process.env.CHAT_ID;
 
 const client = new Client({
   authStrategy: new LocalAuth(),
@@ -21,16 +21,17 @@ client.on("ready", () => {
 });
 
 client.on("message", async (msg) => {
-  if (msg.from !== groupId) {
+  console.log(msg.from);
+  if (msg.from !== chatId) {
     return;
   }
 
   if (msg.body === "!netto" || msg.body === "!neto") {
-    netto(msg);
+    await netto(msg);
   } else if (msg.body.startsWith("!ofender")) {
-    insult(msg);
-  } else if (msg.body === "!figurinha") {
-    sticker(msg);
+    await insult(msg);
+  } else if (msg.body.startsWith("!figurinha")) {
+    await sticker(msg);
   }
 });
 
