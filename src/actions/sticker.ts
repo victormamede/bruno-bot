@@ -1,8 +1,8 @@
-import { Message, MessageMedia } from "whatsapp-web.js";
+import mime from "mime-types";
 import { spawn } from "node:child_process";
 import { unlink } from "node:fs/promises";
 import { join } from "node:path";
-import mime from "mime-types";
+import { Message, MessageMedia } from "whatsapp-web.js";
 import saveMediaToDisk from "../util/saveMediaToDisk";
 
 export default async function sticker(msg: Message) {
@@ -18,6 +18,11 @@ export default async function sticker(msg: Message) {
   msg.reply("Aguenta aí chefe");
   const media = await msg.downloadMedia();
 
+  if (args === undefined) {
+    msg.reply(media, undefined, { sendMediaAsSticker: true });
+    return;
+  }
+
   if (args.includes("remover-fundo")) {
     if (!media.mimetype.startsWith("image/")) {
       msg.reply("Só consigo remover o fundo de imagens meu bom");
@@ -32,24 +37,29 @@ export default async function sticker(msg: Message) {
 
     saveMediaToDisk(media, inputPath);
     msg.reply("removendo plano de fundo");
-    const rembg = spawn("rembg", ["i", inputPath, outputPath]);
 
-    rembg.on("close", (code) => {
-      console.log(`Process exited with code ${code}`);
-      if (code !== 0) {
-        msg.reply(`Deu ruim meu, o programa retornou ${code}`);
+    try {
+      const rembg = spawn("rembg", ["i", inputPath, outputPath]);
+
+      rembg.on("close", (code) => {
+        console.log(`Process exited with code ${code}`);
+        if (code !== 0) {
+          msg.reply(`Deu ruim meu, o programa retornou ${code}`);
+          unlink(inputPath);
+          return;
+        }
+
+        msg.reply(MessageMedia.fromFilePath(outputPath), undefined, {
+          sendMediaAsSticker: true,
+        });
+
         unlink(inputPath);
-        return;
-      }
-
-      msg.reply(MessageMedia.fromFilePath(outputPath), undefined, {
-        sendMediaAsSticker: true,
+        unlink(outputPath);
       });
-
-      unlink(inputPath);
-      unlink(outputPath);
-    });
+    } catch (error) {
+      msg.reply(`Deu ruim meu, o programa retornou ${error}`);
+    }
   } else {
-    msg.reply(media, undefined, { sendMediaAsSticker: true });
+    return;
   }
 }
