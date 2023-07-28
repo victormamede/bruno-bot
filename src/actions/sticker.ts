@@ -13,15 +13,10 @@ export default async function sticker(msg: Message) {
     return;
   }
 
-  const [, args] = msg.body.split(" ");
+  const [, ...args] = msg.body.split(" ");
 
   msg.reply("Aguenta aí chefe");
   const media = await msg.downloadMedia();
-
-  if (args === undefined) {
-    msg.reply(media, undefined, { sendMediaAsSticker: true });
-    return;
-  }
 
   if (args.includes("remover-fundo")) {
     if (!media.mimetype.startsWith("image/")) {
@@ -38,28 +33,24 @@ export default async function sticker(msg: Message) {
     saveMediaToDisk(media, inputPath);
     msg.reply("removendo plano de fundo");
 
-    try {
-      const rembg = spawn("rembg", ["i", inputPath, outputPath]);
+    const rembg = spawn("rembg", ["i", inputPath, outputPath]);
 
-      rembg.on("close", (code) => {
-        console.log(`Process exited with code ${code}`);
-        if (code !== 0) {
-          msg.reply(`Deu ruim meu, o programa retornou ${code}`);
-          unlink(inputPath);
-          return;
-        }
-
-        msg.reply(MessageMedia.fromFilePath(outputPath), undefined, {
-          sendMediaAsSticker: true,
-        });
-
+    rembg.on("close", (code) => {
+      console.log(`Process exited with code ${code}`);
+      if (code !== 0) {
+        msg.reply(`Deu ruim meu, o programa retornou ${code}`);
         unlink(inputPath);
-        unlink(outputPath);
+        return;
+      }
+
+      msg.reply(MessageMedia.fromFilePath(outputPath), undefined, {
+        sendMediaAsSticker: true,
       });
-    } catch (error) {
-      msg.reply(`Deu ruim meu, o programa retornou ${error}`);
-    }
+
+      unlink(inputPath);
+      unlink(outputPath);
+    });
   } else {
-    return;
+    msg.reply(media, undefined, { sendMediaAsSticker: true });
   }
 }

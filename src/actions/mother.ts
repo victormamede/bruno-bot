@@ -6,8 +6,7 @@ export default async function motherInsult(msg: Message) {
   const mentions = await msg.getMentions();
   if (mentions.length === 0) {
     await msg.reply(
-      `Você é burro igual sua mãe, marca o brother quer ofender ai`,
-      undefined
+      `Você é burro igual sua mãe, marca o brother quer ofender ai`
     );
     return;
   }
