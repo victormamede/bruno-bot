@@ -30,13 +30,16 @@ export default async function sticker(msg: Message) {
     const inputPath = join(process.cwd(), "tmp", filename);
     const outputPath = join(process.cwd(), "tmp", "out-" + filename);
 
-    saveMediaToDisk(media, inputPath);
-    msg.reply("removendo plano de fundo");
+    await saveMediaToDisk(media, inputPath);
+    await msg.reply("removendo plano de fundo");
 
     const rembg = spawn("rembg", ["i", inputPath, outputPath]);
 
+    rembg.on("error", (err) => {
+      console.error(err);
+    });
+
     rembg.on("close", (code) => {
-      console.log(`Process exited with code ${code}`);
       if (code !== 0) {
         msg.reply(`Deu ruim meu, o programa retornou ${code}`);
         unlink(inputPath);
@@ -51,6 +54,6 @@ export default async function sticker(msg: Message) {
       unlink(outputPath);
     });
   } else {
-    msg.reply(media, undefined, { sendMediaAsSticker: true });
+    await msg.reply(media, undefined, { sendMediaAsSticker: true });
   }
 }
