@@ -22,7 +22,9 @@ client.on("ready", () => {
 });
 
 client.on("message", async (msg) => {
-  console.log(msg.from);
+  if (msg.from !== chatId) {
+    return;
+  }
 
   switch (true) {
     case msg.body === "!netto" || msg.body === "!neto":
