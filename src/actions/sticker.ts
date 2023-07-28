@@ -1,8 +1,8 @@
-import { Message, MessageMedia } from "whatsapp-web.js";
+import mime from "mime-types";
 import { spawn } from "node:child_process";
 import { unlink } from "node:fs/promises";
 import { join } from "node:path";
-import mime from "mime-types";
+import { Message, MessageMedia } from "whatsapp-web.js";
 import saveMediaToDisk from "../util/saveMediaToDisk";
 
 export default async function sticker(msg: Message) {
@@ -13,7 +13,7 @@ export default async function sticker(msg: Message) {
     return;
   }
 
-  const [, args] = msg.body.split(" ");
+  const [, ...args] = msg.body.split(" ");
 
   msg.reply("Aguenta aí chefe");
   const media = await msg.downloadMedia();
@@ -30,12 +30,16 @@ export default async function sticker(msg: Message) {
     const inputPath = join(process.cwd(), "tmp", filename);
     const outputPath = join(process.cwd(), "tmp", "out-" + filename);
 
-    saveMediaToDisk(media, inputPath);
-    msg.reply("removendo plano de fundo");
+    await saveMediaToDisk(media, inputPath);
+    await msg.reply("removendo plano de fundo");
+
     const rembg = spawn("rembg", ["i", inputPath, outputPath]);
 
+    rembg.on("error", (err) => {
+      console.error(err);
+    });
+
     rembg.on("close", (code) => {
-      console.log(`Process exited with code ${code}`);
       if (code !== 0) {
         msg.reply(`Deu ruim meu, o programa retornou ${code}`);
         unlink(inputPath);
@@ -50,6 +54,6 @@ export default async function sticker(msg: Message) {
       unlink(outputPath);
     });
   } else {
-    msg.reply(media, undefined, { sendMediaAsSticker: true });
+    await msg.reply(media, undefined, { sendMediaAsSticker: true });
   }
 }

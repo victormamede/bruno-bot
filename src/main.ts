@@ -1,7 +1,8 @@
 import { Client, LocalAuth } from "whatsapp-web.js";
+import insult from "./actions/insult";
+import motherInsult from "./actions/mother";
 import netto from "./actions/netto";
 import sticker from "./actions/sticker";
-import insult from "./actions/insult";
 
 const chatId = process.env.CHAT_ID;
 
@@ -21,17 +22,29 @@ client.on("ready", () => {
 });
 
 client.on("message", async (msg) => {
-  console.log(msg.from);
   if (msg.from !== chatId) {
     return;
   }
 
-  if (msg.body === "!netto" || msg.body === "!neto") {
-    await netto(msg);
-  } else if (msg.body.startsWith("!ofender")) {
-    await insult(msg);
-  } else if (msg.body.startsWith("!figurinha")) {
-    await sticker(msg);
+  switch (true) {
+    case msg.body === "!netto" || msg.body === "!neto":
+      await netto(msg);
+      break;
+
+    case msg.body.startsWith("!ofender"):
+      await insult(msg);
+      break;
+
+    case msg.body.startsWith("!mae"):
+      await motherInsult(msg);
+      break;
+
+    case msg.body.startsWith("!figurinha"):
+      await sticker(msg);
+      break;
+
+    default:
+      break;
   }
 });
 
