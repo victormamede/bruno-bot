@@ -1,4 +1,5 @@
 import { Client, LocalAuth } from "whatsapp-web.js";
+import compliment from "./actions/compliment";
 import insult from "./actions/insult";
 import motherInsult from "./actions/mother";
 import netto from "./actions/netto";
@@ -23,6 +24,10 @@ client.on("ready", () => {
 
 client.on("message", async (msg) => {
   if (msg.from !== chatId) {
+    if (msg.body.startsWith("!figurinha")) {
+      await sticker(msg);
+    }
+
     return;
   }
 
@@ -41,6 +46,10 @@ client.on("message", async (msg) => {
 
     case msg.body.startsWith("!figurinha"):
       await sticker(msg);
+      break;
+
+    case msg.body.startsWith("!elogiar"):
+      await compliment(msg);
       break;
 
     default:
