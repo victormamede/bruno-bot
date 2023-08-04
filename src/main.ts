@@ -23,14 +23,6 @@ client.on("ready", () => {
 });
 
 client.on("message", async (msg) => {
-  if (msg.from !== chatId) {
-    if (msg.body.startsWith("!figurinha")) {
-      await sticker(msg);
-    }
-
-    return;
-  }
-
   switch (true) {
     case msg.body === "!netto" || msg.body === "!neto":
       await netto(msg);
