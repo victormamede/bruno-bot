@@ -1,7 +1,7 @@
-import { Message } from "whatsapp-web.js";
-import { predicates, subjects } from "../data/insults";
-import { mother } from "../data/mother";
-import { sample } from "../util/array";
+import type { Message } from "whatsapp-web.js";
+import { predicates, subjects } from "../data/insults.js";
+import { mother } from "../data/mother.js";
+import { sample } from "../util/array.js";
 
 export default async function insult(msg: Message) {
   const mentions = await msg.getMentions();

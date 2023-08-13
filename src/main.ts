@@ -1,14 +1,16 @@
-import { Client, LocalAuth } from "whatsapp-web.js";
-import compliment from "./actions/compliment";
-import insult from "./actions/insult";
-import motherInsult from "./actions/mother";
-import netto from "./actions/netto";
-import sticker from "./actions/sticker";
+import "dotenv/config";
+import whatsapp from "whatsapp-web.js";
+import compliment from "./actions/compliment.js";
+import insult from "./actions/insult.js";
+import motherInsult from "./actions/mother.js";
+import netto from "./actions/netto.js";
+import sticker from "./actions/sticker.js";
+import gpt from "./actions/gpt.js";
 
 const chatId = process.env.CHAT_ID;
 
-const client = new Client({
-  authStrategy: new LocalAuth(),
+const client = new whatsapp.Client({
+  authStrategy: new whatsapp.LocalAuth(),
   puppeteer: {
     args: ["--no-sandbox"],
   },
@@ -27,29 +29,38 @@ client.on("message", async (msg) => {
     return;
   }
 
-  switch (true) {
-    case msg.body === "!netto" || msg.body === "!neto":
-      await netto(msg);
-      break;
+  try {
+    switch (true) {
+      case msg.body === "!netto" || msg.body === "!neto":
+        await netto(msg);
+        break;
 
-    case msg.body.startsWith("!ofender"):
-      await insult(msg);
-      break;
+      case msg.body.startsWith("!ofender"):
+        await insult(msg);
+        break;
 
-    case msg.body.startsWith("!mae"):
-      await motherInsult(msg);
-      break;
+      case msg.body.startsWith("!mae"):
+        await motherInsult(msg);
+        break;
 
-    case msg.body.startsWith("!figurinha"):
-      await sticker(msg);
-      break;
+      case msg.body.startsWith("!figurinha"):
+        await sticker(msg);
+        break;
 
-    case msg.body.startsWith("!elogiar"):
-      await compliment(msg);
-      break;
+      case msg.body.startsWith("!elogiar"):
+        await compliment(msg);
+        break;
 
-    default:
-      break;
+      case msg.body.startsWith("!gpt"):
+        await gpt(msg);
+        break;
+
+      default:
+        break;
+    }
+  } catch (e) {
+    console.error(e);
+    await msg.reply("Deu ruim bixão, não consegui processar seu comando");
   }
 });
 

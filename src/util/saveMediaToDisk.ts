@@ -1,4 +1,4 @@
-import { MessageMedia } from "whatsapp-web.js";
+import type { MessageMedia } from "whatsapp-web.js";
 import { writeFile } from "node:fs/promises";
 
 export default function saveMediaToDisk(media: MessageMedia, output: string) {
