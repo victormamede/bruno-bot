@@ -5,6 +5,7 @@ import { sample } from "../util/array";
 
 export default async function insult(msg: Message) {
   const mentions = await msg.getMentions();
+
   if (mentions.length === 0) {
     msg.reply(
       "Eu vou adivinhar quem é pra xingar??? Vou xingar é você se não largar de ser burro"
@@ -12,15 +13,9 @@ export default async function insult(msg: Message) {
     return;
   }
 
-  console.log(mentions[0].id.user);
-
-  if (mentions[0].id.user === "556293846625") {
+  if (mentions[0].isMe) {
     await msg.reply(
-      `${sample(subjects)}, vai xingar outro, ${sample(mother)} `,
-      undefined,
-      {
-        mentions: [mentions[0]],
-      }
+      `${sample(subjects)}, vai xingar outro, ${sample(mother)} `
     );
 
     return;
