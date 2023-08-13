@@ -1,9 +1,11 @@
+import "dotenv/config";
 import { Client, LocalAuth } from "whatsapp-web.js";
 import compliment from "./actions/compliment";
 import insult from "./actions/insult";
 import motherInsult from "./actions/mother";
 import netto from "./actions/netto";
 import sticker from "./actions/sticker";
+import gpt from "./actions/gpt";
 
 const chatId = process.env.CHAT_ID;
 
@@ -46,6 +48,10 @@ client.on("message", async (msg) => {
 
     case msg.body.startsWith("!elogiar"):
       await compliment(msg);
+      break;
+
+    case msg.body.startsWith("!gpt"):
+      await gpt(msg);
       break;
 
     default:
