@@ -7,7 +7,10 @@ import netto from "./actions/netto.js";
 import sticker from "./actions/sticker.js";
 import gpt from "./actions/gpt.js";
 
-const chatId = process.env.CHAT_ID;
+const chatIds = process.env.CHAT_ID?.split(",");
+
+if (chatIds == null)
+  throw new Error("Please specify the chat ids this bot will operate on");
 
 const client = new whatsapp.Client({
   authStrategy: new whatsapp.LocalAuth(),
@@ -25,7 +28,7 @@ client.on("ready", () => {
 });
 
 client.on("message", async (msg) => {
-  if (msg.from !== chatId) {
+  if (!chatIds.includes(msg.from)) {
     return;
   }
 
