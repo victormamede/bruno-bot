@@ -29,33 +29,38 @@ client.on("message", async (msg) => {
     return;
   }
 
-  switch (true) {
-    case msg.body === "!netto" || msg.body === "!neto":
-      await netto(msg);
-      break;
+  try {
+    switch (true) {
+      case msg.body === "!netto" || msg.body === "!neto":
+        await netto(msg);
+        break;
 
-    case msg.body.startsWith("!ofender"):
-      await insult(msg);
-      break;
+      case msg.body.startsWith("!ofender"):
+        await insult(msg);
+        break;
 
-    case msg.body.startsWith("!mae"):
-      await motherInsult(msg);
-      break;
+      case msg.body.startsWith("!mae"):
+        await motherInsult(msg);
+        break;
 
-    case msg.body.startsWith("!figurinha"):
-      await sticker(msg);
-      break;
+      case msg.body.startsWith("!figurinha"):
+        await sticker(msg);
+        break;
 
-    case msg.body.startsWith("!elogiar"):
-      await compliment(msg);
-      break;
+      case msg.body.startsWith("!elogiar"):
+        await compliment(msg);
+        break;
 
-    case msg.body.startsWith("!gpt"):
-      await gpt(msg);
-      break;
+      case msg.body.startsWith("!gpt"):
+        await gpt(msg);
+        break;
 
-    default:
-      break;
+      default:
+        break;
+    }
+  } catch (e) {
+    console.error(e);
+    await msg.reply("Deu ruim bixão, não consegui processar seu comando");
   }
 });
 
