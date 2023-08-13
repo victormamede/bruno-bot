@@ -1,6 +1,6 @@
-import { Message } from "whatsapp-web.js";
-import { compliments } from "../data/compliment";
-import { sample } from "../util/array";
+import type { Message } from "whatsapp-web.js";
+import { compliments } from "../data/compliment.js";
+import { sample } from "../util/array.js";
 
 export default async function compliment(msg: Message) {
   const mentions = await msg.getMentions();

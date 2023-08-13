@@ -2,10 +2,10 @@ import mime from "mime-types";
 import { spawn } from "node:child_process";
 import { unlink } from "node:fs/promises";
 import { join } from "node:path";
-import { Message, MessageMedia } from "whatsapp-web.js";
-import saveMediaToDisk from "../util/saveMediaToDisk";
+import whatsapp from "whatsapp-web.js";
+import saveMediaToDisk from "../util/saveMediaToDisk.js";
 
-export default async function sticker(msg: Message) {
+export default async function sticker(msg: whatsapp.Message) {
   if (!msg.hasMedia) {
     msg.reply(
       "Aí amigão, não dá pra fazer figurinha se você não me der o arquivo né jumento"
@@ -46,7 +46,7 @@ export default async function sticker(msg: Message) {
         return;
       }
 
-      msg.reply(MessageMedia.fromFilePath(outputPath), undefined, {
+      msg.reply(whatsapp.MessageMedia.fromFilePath(outputPath), undefined, {
         sendMediaAsSticker: true,
       });
 

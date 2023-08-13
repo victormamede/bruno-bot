@@ -1,16 +1,16 @@
 import "dotenv/config";
-import { Client, LocalAuth } from "whatsapp-web.js";
-import compliment from "./actions/compliment";
-import insult from "./actions/insult";
-import motherInsult from "./actions/mother";
-import netto from "./actions/netto";
-import sticker from "./actions/sticker";
-import gpt from "./actions/gpt";
+import whatsapp from "whatsapp-web.js";
+import compliment from "./actions/compliment.js";
+import insult from "./actions/insult.js";
+import motherInsult from "./actions/mother.js";
+import netto from "./actions/netto.js";
+import sticker from "./actions/sticker.js";
+import gpt from "./actions/gpt.js";
 
 const chatId = process.env.CHAT_ID;
 
-const client = new Client({
-  authStrategy: new LocalAuth(),
+const client = new whatsapp.Client({
+  authStrategy: new whatsapp.LocalAuth(),
   puppeteer: {
     args: ["--no-sandbox"],
   },

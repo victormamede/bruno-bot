@@ -4,8 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node --transpile-only src/main.ts"
+    "build": "tsc --project .",
+    "start": "node dist/main.js"
   },
+  "type": "module",
   "dependencies": {
     "@types/mime-types": "^2.1.1",
     "chatgpt": "^5.2.5",
