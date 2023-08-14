@@ -8,6 +8,7 @@ import sticker from "./actions/sticker.js";
 import gpt from "./actions/gpt.js";
 
 const chatIds = process.env.CHAT_ID?.split(",");
+const blacklist = process.env.BLACKLIST?.split(",");
 
 if (chatIds == null)
   throw new Error("Please specify the chat ids this bot will operate on");
@@ -29,6 +30,10 @@ client.on("ready", () => {
 
 client.on("message", async (msg) => {
   if (!chatIds.includes(msg.from)) {
+    return;
+  }
+
+  if (msg.author && blacklist?.includes(msg.author)) {
     return;
   }
 
