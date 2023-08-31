@@ -6,6 +6,7 @@ import motherInsult from "./actions/mother.js";
 import netto from "./actions/netto.js";
 import sticker from "./actions/sticker.js";
 import gpt from "./actions/gpt.js";
+import mock from "./actions/mock.js";
 
 const chatIds = process.env.CHAT_ID?.split(",");
 const blacklist = process.env.BLACKLIST?.split(",");
@@ -75,6 +76,10 @@ Para autorizar, adicione o id ${msg.from} à lista de chats autorizados
         (await msg.getMentions()).some((mention) => mention.isMe) ||
         (msg.hasQuotedMsg && (await msg.getQuotedMessage()).fromMe):
         await gpt(msg);
+        break;
+
+      case Math.random() > 0.98:
+        await mock(msg);
         break;
 
       default:
