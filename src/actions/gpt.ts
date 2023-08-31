@@ -13,14 +13,59 @@ const api = new ChatGPTAPI({
 let parentMessageIds: { [key: string]: string } = {};
 
 export default async function gpt(msg: Message) {
-  const message = msg.body.substring(5);
+  let message = msg.body;
+  const mentions = await msg.getMentions();
+  mentions.forEach((mention) => {
+    message = message.replace(
+      `@${mention.id.user}`,
+      mention.pushname || mention.name || mention.shortName || "anônimo"
+    );
+  });
 
   const chat = await msg.getChat();
-  await chat.sendStateTyping();
+  const user = await msg.getContact();
+
+  let currentPromise = Promise.resolve();
+  let isFirstMessage = true;
+
+  const queueMessage = (text: string) => {
+    currentPromise = currentPromise.then(async () => {
+      if (isFirstMessage) {
+        await msg.reply(text);
+        isFirstMessage = false;
+      } else {
+        await chat.sendMessage(text);
+      }
+    });
+  };
+
+  let currentMessage = "";
+
   const resp = await api.sendMessage(message, {
     parentMessageId: parentMessageIds[msg.from],
-  });
-  parentMessageIds[msg.from] = resp.id;
+    onProgress: (partialResponse) => {
+      if (partialResponse.delta == null) return;
 
-  await msg.reply(resp.text);
+      chat.sendStateTyping();
+      currentMessage += partialResponse.delta;
+
+      const parts = currentMessage.split("\n\n");
+
+      if (parts.length <= 1) {
+        return;
+      }
+
+      while (parts.length > 1) {
+        queueMessage(parts.shift() as string);
+      }
+      currentMessage = parts.shift() || "";
+    },
+    name: (user.pushname || user.name || user.shortName || "").replace(
+      /[^a-zA-Z0-9_-]/g,
+      "_"
+    ),
+  });
+  if (currentMessage) queueMessage(currentMessage);
+
+  parentMessageIds[msg.from] = resp.id;
 }
