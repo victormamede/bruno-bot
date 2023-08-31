@@ -1,5 +1,5 @@
 import "dotenv/config";
-import whatsapp from "whatsapp-web.js";
+import whatsapp, { GroupChat } from "whatsapp-web.js";
 import compliment from "./actions/compliment.js";
 import insult from "./actions/insult.js";
 import motherInsult from "./actions/mother.js";
@@ -29,7 +29,19 @@ client.on("ready", () => {
 });
 
 client.on("message", async (msg) => {
+  const chat = await msg.getChat();
+
   if (!chatIds.includes(msg.from)) {
+    await chat.sendMessage(
+      `
+Desculpe, não estou autorizado a participar desse chat
+Para autorizar, adicione o id ${msg.from} à lista de chats autorizados
+        `.trim()
+    );
+
+    if (chat.isGroup) {
+      await (chat as GroupChat).leave();
+    }
     return;
   }
 
@@ -59,7 +71,9 @@ client.on("message", async (msg) => {
         await compliment(msg);
         break;
 
-      case msg.body.startsWith("!gpt"):
+      case !chat.isGroup ||
+        (await msg.getMentions()).some((mention) => mention.isMe) ||
+        (msg.hasQuotedMsg && (await msg.getQuotedMessage()).fromMe):
         await gpt(msg);
         break;
 
