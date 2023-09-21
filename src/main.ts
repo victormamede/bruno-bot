@@ -33,6 +33,7 @@ client.on("message", async (msg) => {
   const chat = await msg.getChat();
 
   if (!chatIds.includes(msg.from)) {
+    console.log("Tried to use the bot on chat not allowed", msg.from);
     await chat.sendMessage(
       `
 Desculpe, não estou autorizado a participar desse chat
