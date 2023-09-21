@@ -1,8 +1,20 @@
-import type { Message } from "whatsapp-web.js";
+import whatsapp, { type Message } from "whatsapp-web.js";
 import { sample } from "../util/array.js";
+import { readdir } from "node:fs/promises";
 import { predicates } from "../data/insults.js";
+import { join } from "node:path";
 
 export default async function mock(msg: Message) {
+  const diceRoll = Math.random();
+
+  if (diceRoll < 0.5) {
+    messageMock(msg);
+  } else {
+    stickerMock(msg);
+  }
+}
+
+async function messageMock(msg: Message) {
   const mentions = await msg.getMentions();
 
   const source = `${msg.body}, eu sou ${sample(predicates)}`;
@@ -15,4 +27,15 @@ export default async function mock(msg: Message) {
   await msg.reply(message, undefined, {
     mentions,
   });
+}
+
+async function stickerMock(msg: Message) {
+  const imagesPath = join(process.cwd(), "assets", "mock");
+  const files = await readdir(imagesPath);
+
+  const index = Math.floor(Math.random() * files.length);
+  const media = whatsapp.MessageMedia.fromFilePath(
+    join(imagesPath, files[index])
+  );
+  await msg.reply("", undefined, { media, sendMediaAsSticker: true });
 }

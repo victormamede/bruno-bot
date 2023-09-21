@@ -78,7 +78,7 @@ Para autorizar, adicione o id ${msg.from} à lista de chats autorizados
         await gpt(msg);
         break;
 
-      case Math.random() < 0.005:
+      case Math.random() < 0.5:
         await mock(msg);
         break;
 
