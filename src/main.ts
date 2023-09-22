@@ -8,6 +8,7 @@ import sticker from "./actions/sticker.js";
 import gpt from "./actions/gpt.js";
 import mock from "./actions/mock.js";
 import qrcode from "qrcode-terminal";
+import dalle from "./actions/dalle.js";
 
 const chatIds = process.env.CHAT_ID?.split(",");
 const blacklist = process.env.BLACKLIST?.split(",");
@@ -56,6 +57,10 @@ Para autorizar, adicione o id ${msg.from} à lista de chats autorizados
     switch (true) {
       case msg.body === "!netto" || msg.body === "!neto":
         await netto(msg);
+        break;
+
+      case msg.body.startsWith("!dalle"):
+        await dalle(msg);
         break;
 
       case msg.body.startsWith("!ofender"):
