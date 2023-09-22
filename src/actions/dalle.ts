@@ -2,9 +2,10 @@ import openai from "../util/openai.js";
 import whatsapp, { Message } from "whatsapp-web.js";
 
 export default async function dalle(msg: Message) {
-  msg.reply(`Gerando imagem de *${msg.body}*`);
+  const message = msg.body.substring(7);
+  msg.reply(`Gerando imagem de *${message}*`);
   const image = await openai.images.generate({
-    prompt: msg.body,
+    prompt: message,
     size: "512x512",
     n: 1,
   });
