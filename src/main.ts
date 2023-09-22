@@ -7,6 +7,7 @@ import netto from "./actions/netto.js";
 import sticker from "./actions/sticker.js";
 import gpt from "./actions/gpt.js";
 import mock from "./actions/mock.js";
+import qrcode from "qrcode-terminal";
 
 const chatIds = process.env.CHAT_ID?.split(",");
 const blacklist = process.env.BLACKLIST?.split(",");
@@ -22,7 +23,7 @@ const client = new whatsapp.Client({
 });
 
 client.on("qr", (qr) => {
-  console.log(qr);
+  qrcode.generate(qr, { small: true });
 });
 
 client.on("ready", () => {
