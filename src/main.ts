@@ -8,6 +8,8 @@ import sticker from "./actions/sticker.js";
 import gpt from "./actions/gpt.js";
 import mock from "./actions/mock.js";
 import prisma from "./util/prisma.js";
+import qrcode from "qrcode-terminal";
+import dalle from "./actions/dalle.js";
 
 const chatIds = process.env.CHAT_ID?.split(",");
 const blacklist = process.env.BLACKLIST?.split(",");
@@ -23,7 +25,7 @@ const client = new whatsapp.Client({
 });
 
 client.on("qr", (qr) => {
-  console.log(qr);
+  qrcode.generate(qr, { small: true });
 });
 
 client.on("ready", () => {
@@ -34,6 +36,7 @@ client.on("message", async (msg) => {
   const chat = await msg.getChat();
 
   if (!chatIds.includes(msg.from)) {
+    console.log("Tried to use the bot on chat not allowed", msg.from);
     await chat.sendMessage(
       `
 Desculpe, não estou autorizado a participar desse chat
@@ -63,6 +66,10 @@ Para autorizar, adicione o id ${msg.from} à lista de chats autorizados
         await netto(msg);
         break;
 
+      case msg.body.startsWith("!dalle"):
+        await dalle(msg);
+        break;
+
       case msg.body.startsWith("!ofender"):
         await insult(msg);
         break;
@@ -85,7 +92,7 @@ Para autorizar, adicione o id ${msg.from} à lista de chats autorizados
         await gpt(msg);
         break;
 
-      case Math.random() < 0.005:
+      case Math.random() < 0.01:
         await mock(msg);
         break;
 

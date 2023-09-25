@@ -1,6 +1,7 @@
 import type { Message } from "whatsapp-web.js";
 import { ChatGPTAPI } from "chatgpt";
 
+// Remove chatgpt dependency
 const apiKey = process.env.OPENAI_API_KEY as string;
 console.log(`Setting up ChatGPT with key ${apiKey}`);
 
