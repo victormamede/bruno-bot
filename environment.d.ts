@@ -4,8 +4,6 @@ declare global {
       CHAT_ID?: string;
       BLACKLIST?: string;
       OPENAI_API_KEY: string;
-      STRIPE_PUB_KEY: string;
-      STRIPE_SECRET_KEY: string;
       DATABASE_URL: string;
     }
   }
