@@ -1,5 +1,6 @@
 import type { Message } from "whatsapp-web.js";
 import { ChatGPTAPI } from "chatgpt";
+import { userFromMessage } from "../util/user.js";
 
 // Remove chatgpt dependency
 const apiKey = process.env.OPENAI_API_KEY as string;
@@ -24,7 +25,7 @@ export default async function gpt(msg: Message) {
   });
 
   const chat = await msg.getChat();
-  const user = await msg.getContact();
+  const user = await userFromMessage(msg);
 
   let currentPromise = Promise.resolve();
   let isFirstMessage = true;
@@ -61,10 +62,7 @@ export default async function gpt(msg: Message) {
       }
       currentMessage = parts.shift() || "";
     },
-    name: (user.pushname || user.name || user.shortName || "").replace(
-      /[^a-zA-Z0-9_-]/g,
-      "_"
-    ),
+    name: user.name.split(" ")[0].replace(/[^a-zA-Z0-9_-]/g, "_"),
   });
   if (currentMessage) queueMessage(currentMessage);
 

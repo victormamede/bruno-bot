@@ -7,9 +7,9 @@ import netto from "./actions/netto.js";
 import sticker from "./actions/sticker.js";
 import gpt from "./actions/gpt.js";
 import mock from "./actions/mock.js";
-import prisma from "./util/prisma.js";
 import qrcode from "qrcode-terminal";
 import dalle from "./actions/dalle.js";
+import updateName from "./actions/updateName.js";
 
 const chatIds = process.env.CHAT_ID?.split(",");
 const blacklist = process.env.BLACKLIST?.split(",");
@@ -54,12 +54,6 @@ Para autorizar, adicione o id ${msg.from} à lista de chats autorizados
     return;
   }
 
-  const groupData = prisma.chat.upsert({
-    where: { id: msg.from },
-    create: { id: msg.from, credits: 0 },
-    update: {},
-  });
-
   try {
     switch (true) {
       case msg.body === "!netto" || msg.body === "!neto":
@@ -84,6 +78,10 @@ Para autorizar, adicione o id ${msg.from} à lista de chats autorizados
 
       case msg.body.startsWith("!elogiar"):
         await compliment(msg);
+        break;
+
+      case msg.body.startsWith("!nome"):
+        await updateName(msg);
         break;
 
       case !chat.isGroup ||
