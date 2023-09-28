@@ -25,7 +25,7 @@ export default async function registerDebt(msg: Message) {
   const to = await userFromContact(mentions[0]);
 
   await prisma.debt.create({
-    data: { description, value, fromId: from.id, toId: to.id },
+    data: { description, value: value * 100, fromId: from.id, toId: to.id },
   });
 
   return msg.reply(

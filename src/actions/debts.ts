@@ -32,7 +32,7 @@ export default async function debts(msg: Message, client: Client) {
   for (const debt of debts) {
     const contact = await client.getContactById(debt.toId);
 
-    reply += `${brazilianReal.format(debt._sum)} para @${
+    reply += `${brazilianReal.format(debt._sum / 100)} para @${
       debt.toId.split("@")[0]
     }\n`;
     mentions.push(contact);
