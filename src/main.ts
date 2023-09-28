@@ -10,6 +10,8 @@ import mock from "./actions/mock.js";
 import qrcode from "qrcode-terminal";
 import dalle from "./actions/dalle.js";
 import updateName from "./actions/updateName.js";
+import registerDebt from "./actions/registerDebt.js";
+import debts from "./actions/debts.js";
 
 const chatIds = process.env.CHAT_ID?.split(",");
 const blacklist = process.env.BLACKLIST?.split(",");
@@ -82,6 +84,14 @@ Para autorizar, adicione o id ${msg.from} à lista de chats autorizados
 
       case msg.body.startsWith("!nome"):
         await updateName(msg);
+        break;
+
+      case msg.body.startsWith("!devo"):
+        await registerDebt(msg);
+        break;
+
+      case msg.body.startsWith("!dividas"):
+        await debts(msg, client);
         break;
 
       case !chat.isGroup ||

@@ -13,4 +13,22 @@ datasource db {
 model User {
   id   String @id
   name String
+
+  debts   Debt[] @relation("UserDebts")
+  credits Debt[] @relation("UserCredits")
+}
+
+model Debt {
+  id Int @id @default(autoincrement())
+
+  value       Int
+  description String
+
+  fromId String
+  toId   String
+  from   User   @relation(name: "UserDebts", fields: [fromId], references: [id])
+  to     User   @relation(name: "UserCredits", fields: [toId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
