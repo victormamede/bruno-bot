@@ -87,10 +87,12 @@ Para autorizar, adicione o id ${msg.from} à lista de chats autorizados
         break;
 
       case msg.body.startsWith("!devo"):
+        await msg.reply("Essa feature está em desenvolvimento");
         await registerDebt(msg);
         break;
 
       case msg.body.startsWith("!dividas"):
+        await msg.reply("Essa feature está em desenvolvimento");
         await debts(msg, client);
         break;
 
