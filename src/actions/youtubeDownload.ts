@@ -1,6 +1,7 @@
 import type { ChatEvent } from "./types.js";
 import ytdl from "ytdl-core";
 import { join } from "node:path";
+import { unlink } from "node:fs/promises";
 import { createWriteStream } from "node:fs";
 import whatsapp from "whatsapp-web.js";
 
@@ -25,10 +26,11 @@ const youtubeDownload: ChatEvent = {
     ytdl
       .downloadFromInfo(info)
       .pipe(createWriteStream(output))
-      .on("finish", () => {
-        chat.sendMessage(whatsapp.MessageMedia.fromFilePath(output), {
+      .on("finish", async () => {
+        await chat.sendMessage(whatsapp.MessageMedia.fromFilePath(output), {
           caption: info.videoDetails.title,
         });
+        await unlink(output);
       });
   },
   trigger(msg) {
