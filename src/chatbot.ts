@@ -9,6 +9,7 @@ import motherInsult from "./actions/motherInsult.js";
 import registerDebt from "./actions/registerDebt.js";
 import sticker from "./actions/sticker.js";
 import updateName from "./actions/updateName.js";
+import youtubeDownload from "./actions/youtubeDownload.js";
 
 import ChatBot from "./util/ChatBot.js";
 
@@ -26,8 +27,9 @@ chatbot.registerAction(debts);
 chatbot.registerAction(registerDebt);
 chatbot.registerAction(updateName);
 
-// For fun
+// Utility
 chatbot.registerAction(sticker);
+chatbot.registerAction(youtubeDownload);
 chatbot.registerAction(dalle);
 chatbot.registerAction(gpt);
 

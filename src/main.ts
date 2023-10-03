@@ -7,6 +7,7 @@ const client = new whatsapp.Client({
   authStrategy: new whatsapp.LocalAuth(),
   puppeteer: {
     args: ["--no-sandbox"],
+    executablePath: "/usr/bin/google-chrome-stable",
   },
 });
 
