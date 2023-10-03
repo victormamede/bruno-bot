@@ -1,5 +1,6 @@
 import type { Message } from "whatsapp-web.js";
 import { ChatGPTAPI } from "chatgpt";
+import { userFromContact, userFromMessage } from "../util/user.js";
 
 // Remove chatgpt dependency
 const apiKey = process.env.OPENAI_API_KEY as string;
@@ -16,15 +17,16 @@ let parentMessageIds: { [key: string]: string } = {};
 export default async function gpt(msg: Message) {
   let message = msg.body;
   const mentions = await msg.getMentions();
-  mentions.forEach((mention) => {
-    message = message.replace(
-      `@${mention.id.user}`,
-      mention.pushname || mention.name || mention.shortName || "anônimo"
-    );
-  });
+  await Promise.all(
+    mentions.map(async (mention) => {
+      const user = await userFromContact(mention);
+
+      message = message.replace(`@${mention.id.user}`, user.name);
+    })
+  );
 
   const chat = await msg.getChat();
-  const user = await msg.getContact();
+  const user = await userFromMessage(msg);
 
   let currentPromise = Promise.resolve();
   let isFirstMessage = true;
@@ -61,10 +63,7 @@ export default async function gpt(msg: Message) {
       }
       currentMessage = parts.shift() || "";
     },
-    name: (user.pushname || user.name || user.shortName || "").replace(
-      /[^a-zA-Z0-9_-]/g,
-      "_"
-    ),
+    name: user.name.split(" ")[0].replace(/[^a-zA-Z0-9_-]/g, "_"),
   });
   if (currentMessage) queueMessage(currentMessage);
 
