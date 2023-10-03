@@ -1,18 +1,24 @@
+import type { ChatEvent } from "./types.js";
 import whatsapp, { type Message } from "whatsapp-web.js";
 import { sample } from "../util/array.js";
 import { readdir } from "node:fs/promises";
 import { predicates } from "../data/insults.js";
 import { join } from "node:path";
 
-export default async function mock(msg: Message) {
-  const diceRoll = Math.random();
+const mock: ChatEvent = {
+  async action(msg: Message) {
+    const diceRoll = Math.random();
 
-  if (diceRoll < 0.5) {
-    messageMock(msg);
-  } else {
-    stickerMock(msg);
-  }
-}
+    if (diceRoll < 0.3) {
+      messageMock(msg);
+    } else {
+      stickerMock(msg);
+    }
+  },
+  trigger() {
+    return Math.random() < 0.02;
+  },
+};
 
 async function messageMock(msg: Message) {
   const mentions = await msg.getMentions();
@@ -39,3 +45,5 @@ async function stickerMock(msg: Message) {
   );
   await msg.reply("", undefined, { media, sendMediaAsSticker: true });
 }
+
+export default mock;

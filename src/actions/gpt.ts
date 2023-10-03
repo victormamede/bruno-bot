@@ -1,8 +1,8 @@
-import type { Message } from "whatsapp-web.js";
 import { ChatGPTAPI } from "chatgpt";
 import { userFromContact, userFromMessage } from "../util/user.js";
+import type { ChatEvent } from "./types.d.ts";
 
-// Remove chatgpt dependency
+// TODO: Remove chatgpt dependency
 const apiKey = process.env.OPENAI_API_KEY as string;
 console.log(`Setting up ChatGPT with key ${apiKey}`);
 
@@ -14,58 +14,71 @@ const api = new ChatGPTAPI({
 
 let parentMessageIds: { [key: string]: string } = {};
 
-export default async function gpt(msg: Message) {
-  let message = msg.body;
-  const mentions = await msg.getMentions();
-  await Promise.all(
-    mentions.map(async (mention) => {
-      const user = await userFromContact(mention);
+const gpt: ChatEvent = {
+  async action(msg) {
+    let message = msg.body;
+    const mentions = await msg.getMentions();
+    await Promise.all(
+      mentions.map(async (mention) => {
+        const user = await userFromContact(mention);
 
-      message = message.replace(`@${mention.id.user}`, user.name);
-    })
-  );
+        message = message.replace(`@${mention.id.user}`, user.name);
+      })
+    );
 
-  const chat = await msg.getChat();
-  const user = await userFromMessage(msg);
+    const chat = await msg.getChat();
+    const user = await userFromMessage(msg);
 
-  let currentPromise = Promise.resolve();
-  let isFirstMessage = true;
+    let currentPromise = Promise.resolve();
+    let isFirstMessage = true;
 
-  const queueMessage = (text: string) => {
-    currentPromise = currentPromise.then(async () => {
-      if (isFirstMessage) {
-        await msg.reply(text);
-        isFirstMessage = false;
-      } else {
-        await chat.sendMessage(text);
-      }
+    const queueMessage = (text: string) => {
+      currentPromise = currentPromise.then(async () => {
+        if (isFirstMessage) {
+          await msg.reply(text);
+          isFirstMessage = false;
+        } else {
+          await chat.sendMessage(text);
+        }
+      });
+    };
+
+    let currentMessage = "";
+
+    const resp = await api.sendMessage(message, {
+      parentMessageId: parentMessageIds[msg.from],
+      onProgress: (partialResponse) => {
+        if (partialResponse.delta == null) return;
+
+        chat.sendStateTyping();
+        currentMessage += partialResponse.delta;
+
+        const parts = currentMessage.split("\n\n");
+
+        if (parts.length <= 1) {
+          return;
+        }
+
+        while (parts.length > 1) {
+          queueMessage(parts.shift() as string);
+        }
+        currentMessage = parts.shift() || "";
+      },
+      name: user.name.split(" ")[0].replace(/[^a-zA-Z0-9_-]/g, "_"),
     });
-  };
+    if (currentMessage) queueMessage(currentMessage);
 
-  let currentMessage = "";
+    parentMessageIds[msg.from] = resp.id;
+  },
+  async trigger(msg, client) {
+    const chat = await msg.getChat();
 
-  const resp = await api.sendMessage(message, {
-    parentMessageId: parentMessageIds[msg.from],
-    onProgress: (partialResponse) => {
-      if (partialResponse.delta == null) return;
+    if (!chat.isGroup) return true;
+    if ((await msg.getMentions()).some((mention) => mention.isMe)) return true;
+    if (msg.hasQuotedMsg && (await msg.getQuotedMessage()).fromMe) return true;
 
-      chat.sendStateTyping();
-      currentMessage += partialResponse.delta;
+    return false;
+  },
+};
 
-      const parts = currentMessage.split("\n\n");
-
-      if (parts.length <= 1) {
-        return;
-      }
-
-      while (parts.length > 1) {
-        queueMessage(parts.shift() as string);
-      }
-      currentMessage = parts.shift() || "";
-    },
-    name: user.name.split(" ")[0].replace(/[^a-zA-Z0-9_-]/g, "_"),
-  });
-  if (currentMessage) queueMessage(currentMessage);
-
-  parentMessageIds[msg.from] = resp.id;
-}
+export default gpt;

@@ -2,6 +2,7 @@ node_modules/
 
 .wwebjs_*
 tmp/*
+tokens
 
 .env
 dist

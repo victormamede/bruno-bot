@@ -972,9 +972,9 @@ node-fetch@^2.6.5, node-fetch@^2.6.7:
     whatwg-url "^5.0.0"
 
 node-webpmux@^3.1.0:
-  version "3.1.8"
-  resolved "https://registry.yarnpkg.com/node-webpmux/-/node-webpmux-3.1.8.tgz#6658d8387e356f39c783ff3accd18ec6a63b3eec"
-  integrity sha512-CKLYCAU4zlr/2+OVTRb6mcvqgTHYT0/UTAHEzpGny0pOaLDLHzDQXJkPCoghFSOG6ihNKQtZN4GHIJ9VQWhMiw==
+  version "3.1.9"
+  resolved "https://registry.yarnpkg.com/node-webpmux/-/node-webpmux-3.1.9.tgz#f9b2e7e88be35b74f1018eb4fb4f643d322c7c73"
+  integrity sha512-H0vrFU0jJXMy7kJK71tn7/NP+JU7Srif32+iU/PqJecJZ/wsDLOD3iJ2Ec4dnEIlf8OEzhO4sH8D5UMiR4cuMw==
 
 normalize-package-data@^3.0.2:
   version "3.0.3"
@@ -1425,9 +1425,10 @@ webidl-conversions@^3.0.0:
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
   integrity sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==
 
-"whatsapp-web.js@https://github.com/Julzk/whatsapp-web.js/tarball/jkr_hotfix_8":
-  version "1.21.1-alpha.1"
-  resolved "https://github.com/Julzk/whatsapp-web.js/tarball/jkr_hotfix_8#08916539d8ddbb9ca54d0bb9b0982eb0fadaf07e"
+whatsapp-web.js@^1.22.1:
+  version "1.22.1"
+  resolved "https://registry.yarnpkg.com/whatsapp-web.js/-/whatsapp-web.js-1.22.1.tgz#40fc8362558650cf06e8ed9df13f35d407ae5e6c"
+  integrity sha512-KaGxREc5x3LJmSae0RDIGJRLV+GYl9oy9WL6+MqlLrA2Bi34TGfmCrxb2voUM7RdpCdUp49UkQN/zdEygt4GxA==
   dependencies:
     "@pedroslopez/moduleraid" "^5.0.2"
     fluent-ffmpeg "^2.1.2"
