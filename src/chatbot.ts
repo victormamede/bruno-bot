@@ -18,22 +18,46 @@ const chatbot = new ChatBot();
 chatbot.registerAction(firewall);
 
 // Insults
-chatbot.registerAction(insult);
-chatbot.registerAction(compliment);
-chatbot.registerAction(motherInsult);
+chatbot.registerAction(insult, "*!ofender @Fulano*: Ofende o otário a pessoa");
+chatbot.registerAction(
+  compliment,
+  "*!elogiar @Fulano*: Elogia o arrombado (mas é mentira)"
+);
+chatbot.registerAction(
+  motherInsult,
+  "*!mae @Fulano*: Ofende a progenitora do fdp"
+);
 
 // Money-related
-chatbot.registerAction(debts);
-chatbot.registerAction(registerDebt);
-chatbot.registerAction(updateName);
+chatbot.registerAction(debts, "*!dividas*: Printa suas dívidas");
+chatbot.registerAction(
+  registerDebt,
+  "*!devo @Fulano {quantidade} {mensagem}*: Registra que você é um pobre nojento que gosta de dever os outros"
+);
 
 // Utility
-chatbot.registerAction(sticker);
-chatbot.registerAction(youtubeDownload);
-chatbot.registerAction(dalle);
-chatbot.registerAction(gpt);
+chatbot.registerAction(
+  updateName,
+  "*!nome {novo nome}*: Muda seu nome igual os travestis fazem na vida real"
+);
+chatbot.registerAction(
+  sticker,
+  "*!figurinha*: Faz figurinha, não esquece de mandar a imagem seu burro"
+);
+chatbot.registerAction(
+  youtubeDownload,
+  "*!download {url do youtube}*: Baixa vídeo do youtube"
+);
+//chatbot.registerAction(
+//  dalle,
+//  "*!dalle {prompt}*: Faz uma imagem de IA, mas é muito caro"
+//);
+chatbot.registerAction(
+  gpt,
+  "@Mencione ou Responda uma mensagem do Bruno-Bot: Ele te responde de volta"
+);
 
 // Mock
-chatbot.registerAction(mock);
+chatbot.registerAction(mock, "De vez em quando ele também zomba da sua cara");
 
 export default chatbot;
