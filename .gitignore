@@ -4,5 +4,7 @@ node_modules/
 tmp/*
 tokens
 
+prisma/dev.db
+
 .env
 dist

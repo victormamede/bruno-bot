@@ -32,7 +32,7 @@ export default class ChatBot {
   }
 
   public registerClient(client: Client) {
-    client.on("message", async (msg) => {
+    const listener = async (msg: Message) => {
       if (msg.body.startsWith("!help")) {
         msg.reply(this.help);
         return;
@@ -44,6 +44,10 @@ export default class ChatBot {
         console.error(e);
         await msg.reply("Deu ruim bixão, não consegui processar seu comando");
       }
-    });
+    };
+
+    client.on("message", listener);
+
+    return () => client.off("message", listener);
   }
 }
