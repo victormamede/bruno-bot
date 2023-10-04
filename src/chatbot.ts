@@ -54,7 +54,7 @@ chatbot.registerAction(
 //);
 chatbot.registerAction(
   gpt,
-  "@Mencione ou Responda uma mensagem do Bruno-Bot: Ele te responde de volta"
+  "*@Mencione ou Responda uma mensagem do Bruno-Bot*: Ele te responde de volta"
 );
 
 // Mock

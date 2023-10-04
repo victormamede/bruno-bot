@@ -1,13 +1,13 @@
 import "dotenv/config";
-import chatbot from "./chatbot.js";
 import qrcode from "qrcode-terminal";
 import whatsapp from "whatsapp-web.js";
+import chatbot from "./chatbot.js";
 
 const client = new whatsapp.Client({
   authStrategy: new whatsapp.LocalAuth(),
   puppeteer: {
     args: ["--no-sandbox"],
-    executablePath: "/usr/bin/google-chrome-stable",
+    executablePath: "/usr/bin/brave",
   },
 });
 
