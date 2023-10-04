@@ -6,6 +6,8 @@ export type Trigger = (
   client: Client
 ) => boolean | Promise<boolean>;
 
+export type Middleware = (msg: Message, client: Client) => void | Promise<void>;
+
 export type ChatEvent = {
   action: Action;
   trigger: Trigger;

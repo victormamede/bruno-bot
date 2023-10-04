@@ -1,9 +1,14 @@
 import type { Client, Message } from "whatsapp-web.js";
-import type { ChatEvent } from "../actions/types.d.ts";
+import type { ChatEvent, Middleware } from "../types.js";
 
 export default class ChatBot {
   private events: ChatEvent[] = [];
+  private middlewares: Middleware[] = [];
   private help: string = "Aqui vai a lista de comandos: \n";
+
+  public registerMiddleware(middleware: Middleware) {
+    this.middlewares.push(middleware);
+  }
 
   public registerAction(event: ChatEvent, helpText?: string) {
     this.events.push(event);
@@ -14,6 +19,9 @@ export default class ChatBot {
   }
 
   private async onMessage(msg: Message, client: Client) {
+    for (const middleware of this.middlewares) {
+      middleware(msg, client);
+    }
     for (const { trigger, action } of this.events) {
       if (await trigger(msg, client)) {
         await action(msg, client);

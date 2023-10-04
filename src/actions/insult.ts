@@ -1,4 +1,4 @@
-import type { ChatEvent } from "./types.d.ts";
+import type { ChatEvent } from "../types.js";
 import type { Message } from "whatsapp-web.js";
 import { predicates, subjects } from "../data/insults.js";
 import { mother } from "../data/mother.js";

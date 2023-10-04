@@ -1,4 +1,4 @@
-import type { ChatEvent } from "./types.js";
+import type { ChatEvent } from "../types.js";
 import { userFromMessage } from "../util/user.js";
 import prisma from "../util/prisma.js";
 import type { Contact } from "whatsapp-web.js";

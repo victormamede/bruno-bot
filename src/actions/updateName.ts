@@ -1,4 +1,4 @@
-import type { ChatEvent } from "./types.d.ts";
+import type { ChatEvent } from "../types.js";
 import prisma from "../util/prisma.js";
 import { userFromMessage } from "../util/user.js";
 

@@ -1,4 +1,4 @@
-import type { ChatEvent } from "./types.js";
+import type { ChatEvent } from "../types.js";
 import whatsapp, { type Message } from "whatsapp-web.js";
 import { sample } from "../util/array.js";
 import { readdir } from "node:fs/promises";

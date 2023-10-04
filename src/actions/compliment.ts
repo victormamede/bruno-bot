@@ -1,4 +1,4 @@
-import type { ChatEvent } from "./types.js";
+import type { ChatEvent } from "../types.js";
 import { compliments } from "../data/compliment.js";
 import { sample } from "../util/array.js";
 

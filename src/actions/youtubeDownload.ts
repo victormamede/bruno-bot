@@ -1,4 +1,4 @@
-import type { ChatEvent } from "./types.js";
+import type { ChatEvent } from "../types.js";
 import ytdl from "ytdl-core";
 import { join } from "node:path";
 import { unlink } from "node:fs/promises";

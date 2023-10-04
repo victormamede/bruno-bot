@@ -1,4 +1,4 @@
-import type { ChatEvent } from "./types.js";
+import type { ChatEvent } from "../types.js";
 
 const chatIds = process.env.CHAT_ID?.split(",") || [];
 const blacklist = process.env.BLACKLIST?.split(",");

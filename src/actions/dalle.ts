@@ -1,5 +1,5 @@
 import whatsapp from "whatsapp-web.js";
-import type { ChatEvent } from "./types.js";
+import type { ChatEvent } from "../types.js";
 import openai from "../util/openai.js";
 
 const dalle: ChatEvent = {

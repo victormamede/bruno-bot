@@ -1,10 +1,9 @@
 import { ChatGPTAPI } from "chatgpt";
 import { userFromContact, userFromMessage } from "../util/user.js";
-import type { ChatEvent } from "./types.d.ts";
+import type { ChatEvent } from "../types.js";
 
 // TODO: Remove chatgpt dependency
 const apiKey = process.env.OPENAI_API_KEY as string;
-console.log(`Setting up ChatGPT with key ${apiKey}`);
 
 const api = new ChatGPTAPI({
   apiKey,

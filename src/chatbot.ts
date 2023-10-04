@@ -10,10 +10,13 @@ import registerDebt from "./actions/registerDebt.js";
 import sticker from "./actions/sticker.js";
 import updateName from "./actions/updateName.js";
 import youtubeDownload from "./actions/youtubeDownload.js";
+import log from "./middlewares/log.js";
 
 import ChatBot from "./util/ChatBot.js";
 
 const chatbot = new ChatBot();
+
+chatbot.registerMiddleware(log);
 
 chatbot.registerAction(firewall);
 

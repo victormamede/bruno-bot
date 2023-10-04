@@ -1,4 +1,4 @@
-import type { ChatEvent } from "./types.js";
+import type { ChatEvent } from "../types.js";
 import mime from "mime-types";
 import { spawn } from "node:child_process";
 import { unlink } from "node:fs/promises";
